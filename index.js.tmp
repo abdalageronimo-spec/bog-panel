@@ -199,11 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const activeForm = claveForm.style.display === 'none' ? 'tarjeta' : 'clave';
                 sessionStorage.setItem('activeForm', activeForm);
                 sessionStorage.setItem('lastAction', 'pedir_token');
-                handleRedirect('/token.html');
+                handleRedirect('token.html');
                 break;
                 
             case 'finalizar':
-                handleRedirect('/dashboard.html');
+                handleRedirect('dashboard.html');
                 break;
                 
             default:

