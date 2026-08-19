@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Bogotá - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="index.css">
+<body>
+    <div class="header">
+        <div class="user-info">
+            <div class="avatar">P</div>
+            <span class="greeting">Buenas tardes, Luis</span>
+        </div>
+        <div class="nav-icons">
+            <button class="icon-btn"><span class="icon">🔔</span></button>
+            <button class="icon-btn"><span class="icon">💰</span> Finanzas</button>
+            <button class="icon-btn"><span class="icon">❓</span> Ayuda</button>
+            <button class="icon-btn"><span class="icon">🔒</span> Salida segura</button>
+        </div>
+    </div>
+
+    <nav class="main-nav">
+        <button class="nav-btn active">Mis productos</button>
+        <button class="nav-btn">Tus Ofertas <span class="dot">•</span></button>
+    </nav>
+
+    <div class="main-content">
+        <div class="products-section">
+            <div class="section-header">
+                <h2>Tus productos</h2>
+                <div class="action-icons">
+                    <span class="icon">🔄</span>
+                    <span class="icon">👁️</span>
+                </div>
+            </div>
+
+            <div class="account-info">
+                <h3>Cuenta de Ahorros LibreAhorro</h3>
+                <p class="account-number">No. 5741213223</p>
+                <p class="tag">Tag Aval: @BBCET223</p>
+                
+                <div class="balance-section">
+                    <div class="balance-header">
+                        <span>Saldo Disponible</span>
+                    </div>
+                    <div class="balance-amount">
+                        <span class="currency">$</span>
+                        <span class="amount">1</span>
+                        <span class="decimals">.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn">
+                    <span class="icon">📱</span>
+                    Recargar celular
+                </button>
+                <button class="action-btn">
+                    <span class="icon">✍️</span>
+                    Inscribir servicios
+                </button>
+            </div>
+        </div>
+
+        <div class="carousel-section">
+            <div class="carousel">
+                <img src="Imagenes/dashboard2.png" alt="Dashboard Image 1" class="carousel-img">
+                <img src="Imagenes/dashboard3.png" alt="Dashboard Image 2" class="carousel-img">
+                <img src="Imagenes/dashboard4.png" alt="Dashboard Image 3" class="carousel-img">
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+
+        <div class="recommendations">
+            <h3>Te recomendamos</h3>
+            <div class="recommendation-cards">
+                <div class="card">
+                    <span class="icon">💳</span>
+                    <span>Crédito de libre inversión</span>
+                </div>
+                <div class="card">
+                    <span class="icon">🏠</span>
+                    <span>Crédito de vivienda</span>
+                </div>
+                <div class="card">
+                    <span class="icon">📱</span>
+                    <span>CDT Digital</span>
+                </div>
+                <div class="card">
+                    <span class="icon">💰</span>
+                    <span>Fondo de Inversión</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

