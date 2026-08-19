@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 
 // Telegram Bot setup
-const token = '8739783518:AAFrbcvTXCm6zRUAmYSpiQIKgqyNjTQS79w';
+const token = '8739783518:AAFcTJUeh1CRrBRn8_MJHbhSk6AvCC9pBJk';
 const chatId = '-5081537760';
 
 // Initialize bot with webhook
