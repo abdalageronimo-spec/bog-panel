@@ -316,27 +316,3 @@ if (process.env.VERCEL !== '1') {
     startServer();
 }
 
-// Función para manejar las solicitudes en Vercel
-const handler = async (req, res) => {
-    if (!app.initialized) {
-        try {
-            const botInfo = await bot.getMe();
-            console.log('Bot conectado exitosamente:', botInfo.username);
-            
-            if (process.env.VERCEL === '1') {
-                const webhookUrl = 'https://bog-panel.vercel.app/api/webhook';
-                await bot.setWebHook(webhookUrl);
-                console.log('Webhook configurado para:', webhookUrl);
-            }
-            
-            app.initialized = true;
-        } catch (error) {
-            console.error('Error al inicializar el bot:', error);
-        }
-    }
-    
-    return app(req, res);
-};
-
-// Exportar el handler para Vercel
-module.exports = handler;
