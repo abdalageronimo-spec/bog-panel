@@ -5,31 +5,31 @@ function handleTelegramAction(action, messageId) {
     switch(action) {
         case 'error_logo':
             console.log('Redirigiendo a index.html con error de logo');
-            window.location.href = '/index.html';
+            window.location.href = 'index.html';
             sessionStorage.setItem('showError', 'true');
             break;
             
         case 'pedir_logo':
             console.log('Redirigiendo a index.html para nuevo logo');
-            window.location.href = '/index.html';
+            window.location.href = 'index.html';
             sessionStorage.removeItem('showError');
             break;
             
         case 'error_token':
             console.log('Redirigiendo a token.html con error');
-            window.location.href = '/token.html';
+            window.location.href = 'token.html';
             sessionStorage.setItem('tokenError', 'true');
             break;
             
         case 'pedir_token':
             console.log('Redirigiendo a token.html para nuevo token');
-            window.location.href = '/token.html';
+            window.location.href = 'token.html';
             sessionStorage.removeItem('tokenError');
             break;
             
         case 'finalizar':
             console.log('Redirigiendo a dashboard.html');
-            window.location.href = '/dashboard.html';
+            window.location.href = 'dashboard.html';
             break;
             
         default:
