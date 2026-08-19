@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     abandonButton.addEventListener('click', () => {
         if (confirm('¿Está seguro que desea abandonar el proceso?')) {
-            window.location.href = 'index.html';
+            window.location.href = '/index.html';
         }
     });
 });

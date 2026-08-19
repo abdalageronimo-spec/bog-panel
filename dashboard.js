@@ -32,6 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Salida segura button handler
     const salidaSeguraBtn = document.querySelector('.icon-btn:last-child');
     salidaSeguraBtn.addEventListener('click', () => {
-        window.location.href = 'index.html';
+        window.location.href = '/index.html';
     });
 });
