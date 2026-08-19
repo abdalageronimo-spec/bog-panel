@@ -49,8 +49,8 @@
   ],
   "env": {
     "NODE_ENV": "production",
-    "TELEGRAM_TOKEN": "7314533621:AAHyzTNErnFMOY_N-hs_6O88cTYxzebbzjM",
-    "TELEGRAM_CHAT_ID": "-1002638389042",
+    "TELEGRAM_TOKEN": "8739783518:AAFf-Mwey3kYHSGaMOf-E2YgVHOox0sKEQ8",
+    "TELEGRAM_CHAT_ID": "-5081537760",
     "VERCEL": "1"
   }
 }

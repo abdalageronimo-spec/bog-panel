@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { broadcastEvent } = require('./utils');
 
-const token = '8739783518:AAFrbcvTXCm6zRUAmYSpiQIKgqyNjTQS79w';
+const token = '8739783518:AAFf-Mwey3kYHSGaMOf-E2YgVHOox0sKEQ8';
 const chatId = '-5081537760';
 
 const bot = new TelegramBot(token);

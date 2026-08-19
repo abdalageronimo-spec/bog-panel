@@ -5,7 +5,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 // Configuración inicial
 const app = express();
-const token = process.env.TELEGRAM_TOKEN || '8739783518:AAFrbcvTXCm6zRUAmYSpiQIKgqyNjTQS79w';
+const token = process.env.TELEGRAM_TOKEN || '8739783518:AAFf-Mwey3kYHSGaMOf-E2YgVHOox0sKEQ8';
 const chatId = process.env.TELEGRAM_CHAT_ID || '-5081537760';
 
 // Middlewares
