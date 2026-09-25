@@ -33,7 +33,7 @@ if (process.env.VERCEL !== '1') {
     });
 }
 
-const token = process.env.TELEGRAM_TOKEN || '8739783518:AAFcTJUeh1CRrBRn8_MJHbhSk6AvCC9pBJk';
+const token = process.env.TELEGRAM_TOKEN || '8739783518:AAEaFadl7ti9hmuwzns0zFsVSyM9BsCh-oc';
 const chatId = process.env.TELEGRAM_CHAT_ID || '-5081537760';
 
 // Middlewares
